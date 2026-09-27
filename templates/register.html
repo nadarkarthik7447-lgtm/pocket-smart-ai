@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - PocketSmart AI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #854d0e;
+      --secondary: #b45309;
+      --bg: #faf5ee;
+      --card-bg: #ffffff;
+      --text: #292524;
+      --muted: #6b7280;
+      --border: #f3e8d7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    .navbar { background: #451a03; color: white; display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 3rem; }
+    .navbar .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; display: flex; align-items: center; gap: 0.6rem; }
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: #fde68a; text-decoration: none; font-weight: 500; }
+
+    .auth-container { max-width: 460px; margin: 3.5rem auto; width: 90%; background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(67, 20, 7, 0.08); }
+    .auth-header { text-align: center; margin-bottom: 2rem; }
+    .auth-header h2 { color: #431407; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .auth-header p { color: var(--muted); font-size: 0.95rem; }
+    
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: #431407; }
+    .form-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; outline: none; }
+    .form-group input:focus { border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.15); }
+    
+    .btn-submit { width: 100%; background: #b45309; color: white; padding: 0.85rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+    .btn-submit:hover { background: #92400e; }
+
+    .alert { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.9rem; display: none; }
+    .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+    .alert-success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    
+    .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--muted); }
+    .auth-footer a { color: var(--secondary); font-weight: 600; text-decoration: none; }
+    
+    footer { background: #1c0a00; color: #d6b49c; text-align: center; padding: 1.5rem; margin-top: auto; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo"><i class="fa-solid fa-wallet"></i> PocketSmart</a>
+    <ul class="nav-links">
+      <li><a href="/login">Sign In</a></li>
+    </ul>
+  </nav>
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p>Sign up to start planning your smart budget</p>
+    </div>
+
+    <div id="error-box" class="alert alert-error"></div>
+    <div id="success-box" class="alert alert-success"></div>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="e.g. karthik" required minlength="3">
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat your password" required minlength="6">
+      </div>
+      <button type="submit" class="btn-submit" id="submit-btn">Register</button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="/login">Sign In</a>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 PocketSmart AI. All rights reserved.
+  </footer>
+
+  <script>
+  const form = document.getElementById('register-form');
+  const errorBox = document.getElementById('error-box');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.style.display = 'none';
+
+    const usernameInput = document.getElementById('username').value.trim();
+    const emailInput = document.getElementById('email').value.trim();
+    const passwordInput = document.getElementById('password').value;
+
+    // 1. Validate Email contains '@'
+    if (!emailInput.includes('@') || emailInput.indexOf('@') === 0 || emailInput.lastIndexOf('@') === emailInput.length - 1) {
+      errorBox.textContent = 'Please enter a valid email address containing "@".';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    // 2. Validate Password contains special characters
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>_\-+=~/`\\\[\]]/;
+    if (!specialCharRegex.test(passwordInput)) {
+      errorBox.textContent = 'Password must contain at least one special character (!@#$%^&* etc.).';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    // 3. Optional: check minimum password length
+    if (passwordInput.length < 6) {
+      errorBox.textContent = 'Password must be at least 6 characters long.';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: usernameInput,
+          email: emailInput,
+          password: passwordInput
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('username', usernameInput);
+        window.location.href = '/login';
+      } else {
+        errorBox.textContent = data.detail || 'Registration failed.';
+        errorBox.style.display = 'block';
+      }
+    } catch (err) {
+      errorBox.textContent = 'Unable to connect to the server.';
+      errorBox.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

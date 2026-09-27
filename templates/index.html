@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart AI: Smart Budget & Recommendation Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+:root {
+  --primary: #78350f;          /* Deep warm bronze */
+  --primary-dark: #451a03;     /* Dark roast coffee */
+  --secondary: #d97706;        /* Bright golden amber */
+  --accent: #f59e0b;           /* Warm sunlight */
+  --bg: #fffbeb;               /* Soft warm cream */
+  --card-bg: #ffffff;
+  --text: #292524;             /* Soft charcoal stone */
+  --muted: #78716c;
+  --border: #fde68a;           /* Gentle gold border */
+}
+
+body {
+  background: radial-gradient(circle at 15% 15%, #fef3c7 0%, #fffbeb 60%);
+}
+
+.hero {
+  background: linear-gradient(135deg, #78350f 0%, #b45309 60%, #d97706 100%) !important;
+  color: #ffffff;
+  text-align: center;
+  padding: 4.5rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(180, 83, 9, 0.2);
+}
+
+.section-title .bar {
+  background: #d97706;
+}
+
+.btn-hero-primary, .btn-card, .btn-nav {
+  background: linear-gradient(90deg, #d97706 0%, #b45309 100%);
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+}
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .navbar {
+      background-color: var(--primary);
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .navbar .logo {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      color: #fff;
+    }
+    .btn-nav {
+      background-color: var(--secondary);
+      color: #fff !important;
+      padding: 0.55rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .hero {
+      background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+      color: #fff;
+      text-align: center;
+      padding: 4.5rem 1.5rem;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .hero h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      opacity: 0.95;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      max-width: 680px;
+      margin: 0 auto 2.2rem auto;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+    .btn-hero-primary {
+      background-color: var(--secondary);
+      color: #fff;
+      padding: 0.75rem 1.8rem;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 0.75rem 1.8rem;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 3.5rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .section-title h2 {
+      font-size: 2.2rem;
+      color: var(--primary);
+    }
+    .section-title .bar {
+      width: 60px;
+      height: 4px;
+      background: var(--accent);
+      margin: 0.6rem auto 1rem auto;
+      border-radius: 2px;
+    }
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .planner-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 1.8rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+    }
+    .planner-card .icon-box {
+      font-size: 2.75rem;
+      color: var(--secondary);
+      margin-bottom: 1.25rem;
+    }
+    .planner-card h3 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+    .planner-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 1.75rem;
+    }
+    .btn-card {
+      background-color: var(--secondary);
+      color: #fff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      display: block;
+    }
+    footer {
+      background-color: var(--primary-dark);
+      color: #94a3b8;
+      text-align: center;
+      padding: 2rem;
+      margin-top: auto;
+      font-size: 0.9rem;
+    }
+    /* Modern Footer */
+    .site-footer {
+      background: linear-gradient(180deg, #38150a 0%, #200a04 100%);
+      color: #ebdcd3;
+      padding: 4rem 2rem 2rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.92rem;
+    }
+
+    .footer-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(235, 220, 211, 0.12);
+    }
+
+    @media (max-width: 860px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-brand p {
+      color: #c9b1a5;
+      line-height: 1.6;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      max-width: 290px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .social-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ebdcd3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .social-icon:hover {
+      background: #b84b14;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .footer-column h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .footer-column ul li a {
+      color: #c9b1a5;
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-column ul li a:hover {
+      color: #ffffff;
+      padding-left: 2px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      font-size: 0.82rem;
+      color: #9c8376;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo"><i class="fa-solid fa-wallet"></i> PocketSmart</a>
+    <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="/testimonials">Testimonials</a></li>
+        <li><a href="/login">Sign In</a></li>
+        <li><a href="/register" class="btn-nav">Get Started</a></li>
+      </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>PocketSmart</h1>
+    <h2>AI-Powered Budget Planning for Everyday Needs</h2>
+    <p>Make smarter financial decisions with personalized budget recommendations for home interiors, parties, and jewelry purchases. Our AI helps you get the most value for your money.</p>
+    <div>
+      <a href="/register" class="btn-hero-primary">Get Started</a>
+      <a href="#features" class="btn-hero-secondary">Learn More</a>
+    </div>
+  </section>
+
+  <div class="container" id="features">
+    <div class="section-title">
+      <h2>Our Smart Budget Planners</h2>
+      <div class="bar"></div>
+      <p>Discover how PocketSmart helps you make better financial decisions across different areas of your life</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="planner-card">
+        <div>
+          <div class="icon-box"><i class="fa-solid fa-house"></i></div>
+          <h3>Home Interior Budget Planner</h3>
+          <p>Get personalized recommendations for furniture, lighting, and decor that fit your style preferences and budget constraints. Our AI helps you create a beautiful space without overspending.</p>
+        </div>
+        <a href="/home-planner" class="btn-card">Get Started</a>
+      </div>
+
+      <div class="planner-card">
+        <div>
+          <div class="icon-box"><i class="fa-solid fa-champagne-glasses"></i></div>
+          <h3>Party Budget Planner</h3>
+          <p>Plan your perfect event with smart budget allocations for venue, catering, decorations, and entertainment. Our AI suggests the best ways to create memorable events while staying within your budget.</p>
+        </div>
+        <a href="/party-planner" class="btn-card">Get Started</a>
+      </div>
+
+      <div class="planner-card">
+        <div>
+          <div class="icon-box"><i class="fa-solid fa-gem"></i></div>
+          <h3>Jewelry Budget Planner</h3>
+          <p>Find the ideal jewelry pieces for any occasion that match your outfit and budget. Our AI recommends options based on your style preferences, occasion, and available budget.</p>
+        </div>
+        <a href="/jewelry-planner" class="btn-card">Get Started</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 PocketSmart AI. All rights reserved.
+  </footer>
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <!-- Brand & Social Column -->
+      <div class="footer-brand">
+        <h3>PocketSmart</h3>
+        <p>AI-powered budget planning tools to help you make smarter financial decisions every day.</p>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="Facebook">f</a>
+          <a href="#" class="social-icon" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-icon" aria-label="Instagram">📷</a>
+          <a href="#" class="social-icon" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+
+      <!-- Company Column -->
+      <div class="footer-column">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/#features">About Us</a></li>
+          <li><a href="/testimonials">Our Team</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Product Column -->
+      <div class="footer-column">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="/home-planner">Home Planner</a></li>
+          <li><a href="/party-planner">Party Planner</a></li>
+          <li><a href="/jewelry-planner">Jewelry Planner</a></li>
+          <li><a href="/dashboard">Pricing</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources Column -->
+      <div class="footer-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Guides</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Column -->
+      <div class="footer-column">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookies Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="footer-bottom">
+      &copy; 2026 PocketSmart. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>

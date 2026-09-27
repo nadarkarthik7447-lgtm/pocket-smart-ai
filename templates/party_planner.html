@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart - Party Budget Planner</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #fbf7f4; color: #2c1a14; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Top Navigation */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 3rem;
+      background: #1e0b05;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #e5cdbf;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: #f59e0b; }
+    .nav-pill-active {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .btn-logout { color: #fca5a5 !important; }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      text-align: center;
+      padding: 3.2rem 1.5rem 5.5rem 1.5rem;
+    }
+    .hero-banner h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .hero-banner p {
+      color: #faeade;
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Container */
+    .planner-wrapper {
+      max-width: 820px;
+      margin: -3.8rem auto 3rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+    .planner-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.2rem;
+      box-shadow: 0 10px 30px rgba(74, 25, 10, 0.08);
+      border: 1px solid #ebdcd3;
+    }
+
+    /* Form Section Cards */
+    .form-section {
+      background: #faf4ef;
+      border: 1px solid #f0e1d7;
+      border-radius: 12px;
+      padding: 1.4rem;
+      margin-bottom: 1.6rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #701c0a;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e7cebf;
+    }
+    .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #a73c0e;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    @media (max-width: 600px) {
+      .grid-2col { grid-template-columns: 1fr; }
+    }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #4a2c1f;
+      margin-bottom: 0.45rem;
+    }
+    .input-box {
+      width: 100%;
+      padding: 0.75rem 0.95rem;
+      border-radius: 8px;
+      border: 1.5px solid #d9c4b7;
+      font-size: 0.92rem;
+      color: #2c1a14;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .input-box:focus {
+      border-color: #a73c0e;
+      box-shadow: 0 0 0 3px rgba(167, 60, 14, 0.12);
+    }
+    textarea.input-box {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    /* Party Needs Selectable Cards */
+    .party-needs-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .need-card {
+      background: #ffffff;
+      border: 1.5px solid #d9c4b7;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .need-card input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #a73c0e;
+      cursor: pointer;
+    }
+    .need-card.active {
+      border-color: #a73c0e;
+      background: #fdf5ef;
+      box-shadow: 0 2px 8px rgba(167, 60, 14, 0.12);
+    }
+    .need-icon-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #ffffff;
+    }
+    .badge-catering { background: #d97706; }
+    .badge-decoration { background: #0284c7; }
+    .badge-entertainment { background: #ea580c; }
+    .need-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #3b190d;
+    }
+
+    /* Submit Button */
+    .btn-submit-wrap {
+      text-align: center;
+      margin-top: 1.8rem;
+    }
+    .btn-generate {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 26px;
+      padding: 0.85rem 2.4rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(112, 28, 10, 0.25);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    /* --- Results Section Styling (Exact Match to Screenshots) --- */
+    #results-section {
+      display: none;
+      margin-top: 2.5rem;
+    }
+    .results-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .results-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #2c1a14;
+    }
+    .btn-print-save {
+      background: #a73c0e;
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 1.1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .budget-callout {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #a73c0e;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Modular Result Cards */
+    .result-card {
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #ebdcd3;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      margin-bottom: 1.4rem;
+    }
+    .card-banner-header {
+      background: #faf4ef;
+      border-bottom: 1px solid #ebdcd3;
+      color: #701c0a;
+      padding: 0.75rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .card-inner-body {
+      padding: 1.1rem 1.3rem;
+    }
+
+    /* Sub-items within category cards */
+    .category-subitem {
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #f6ece5;
+    }
+    .category-subitem:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    .subitem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #2c1a14;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+    .subitem-desc {
+      font-size: 0.82rem;
+      color: #7c6257;
+      margin-bottom: 0.45rem;
+    }
+    .shop-line {
+      font-size: 0.82rem;
+      color: #4a2c1f;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .shop-line a {
+      color: #a73c0e;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .shop-line a:hover {
+      text-decoration: underline;
+    }
+
+    /* Total / Allocated / Remaining Table */
+    .overview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .overview-table td {
+      padding: 0.75rem 1.4rem;
+      border-bottom: 1px solid #f6ece5;
+    }
+    .overview-table tr:last-child td { border-bottom: none; }
+    .overview-table td:first-child {
+      color: #4a2c1f;
+      font-weight: 600;
+    }
+    .overview-table td:last-child {
+      text-align: right;
+      font-weight: 800;
+      color: #2c1a14;
+    }
+    .table-val-blue { color: #a73c0e !important; }
+
+    /* Venue Suggestions Card */
+    .venue-item-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #2c1a14;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .venue-tags-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.84rem;
+      color: #634b41;
+      margin-bottom: 0.7rem;
+    }
+    .venue-links-row {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.84rem;
+      padding-top: 0.45rem;
+      border-top: 1px dashed #ebdcd3;
+    }
+    .venue-links-row a {
+      color: #a73c0e;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* Additional Suggestions */
+    .suggestions-box {
+      background: #faf4ef;
+      border: 1px solid #eedfd6;
+      border-radius: 8px;
+      padding: 1.1rem;
+    }
+    .suggestions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .suggestions-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.86rem;
+      color: #3b190d;
+      line-height: 1.45;
+    }
+    .check-bullet {
+      color: #a73c0e;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    /* Footer */
+    .footer-bar {
+      margin-top: auto;
+      background: #1e0b05;
+      color: #a38c82;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="/dashboard" class="brand">👛 PocketSmart</a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">📊 Dashboard</a></li>
+      <li><a href="/home-planner">🏠 Home Planner</a></li>
+      <li><a href="/party-planner" class="nav-pill-active">🎉 Party Planner</a></li>
+      <li><a href="/jewelry-planner">💍 Jewelry Planner</a></li>
+      <li><a href="/history">🕒 History</a></li>
+      <li><a href="/login" class="btn-logout" id="logout-btn">↪ Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Headline -->
+  <header class="hero-banner">
+    <h1>Party Budget Planner</h1>
+    <p>Plan your perfect event with AI-powered budget recommendations</p>
+  </header>
+
+  <!-- Main Content Form -->
+  <main class="planner-wrapper">
+    <div class="planner-card">
+      <form id="party-form">
+
+        <!-- 1. Basic Information Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">$</span>
+            <span>Basic Information</span>
+          </div>
+          <div class="grid-2col">
+            <div>
+              <label class="field-label" for="total_budget">💵 Total Budget (₹)</label>
+              <input type="number" id="total_budget" name="total_budget" class="input-box" placeholder="e.g. 5000" value="5000" required>
+            </div>
+            <div>
+              <label class="field-label" for="num_guests">👥 Number of Guests</label>
+              <input type="number" id="num_guests" name="num_guests" class="input-box" placeholder="e.g. 3" value="3" min="1" required>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Event Details Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">🎮</span>
+            <span>Event Details</span>
+          </div>
+          <div class="grid-2col">
+            <div>
+              <label class="field-label" for="party_type">🎂 Party Type</label>
+              <input type="text" id="party_type" name="party_type" class="input-box" placeholder="e.g. Wedding, Birthday, Anniversary" value="Wedding" required>
+            </div>
+            <div>
+              <label class="field-label" for="venue_type">📍 Venue Type</label>
+              <input type="text" id="venue_type" name="venue_type" class="input-box" placeholder="e.g. Home, Banquet Hall, Outdoor" value="Home" required>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Party Needs Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">📋</span>
+            <span>Party Needs</span>
+          </div>
+          <div class="party-needs-group">
+            <label class="need-card active" id="card-catering">
+              <input type="checkbox" name="needs" value="catering" checked onchange="toggleNeedCard(this)">
+              <div class="need-icon-badge badge-catering">🍴</div>
+              <span class="need-title">Catering</span>
+            </label>
+
+            <label class="need-card" id="card-decoration">
+              <input type="checkbox" name="needs" value="decoration" onchange="toggleNeedCard(this)">
+              <div class="need-icon-badge badge-decoration">🎨</div>
+              <span class="need-title">Decoration</span>
+            </label>
+
+            <label class="need-card active" id="card-entertainment">
+              <input type="checkbox" name="needs" value="entertainment" checked onchange="toggleNeedCard(this)">
+              <div class="need-icon-badge badge-entertainment">🎵</div>
+              <span class="need-title">Entertainment</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- 4. Additional Requirements Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">💬</span>
+            <span>Additional Requirements</span>
+          </div>
+          <textarea id="additional_requirements" name="additional_requirements" class="input-box" placeholder="Special requests, themes, dietary restrictions, etc."></textarea>
+        </section>
+
+        <!-- Submit Button -->
+        <div class="btn-submit-wrap">
+          <button type="submit" class="btn-generate">📊 Generate Budget Plan</button>
+        </div>
+
+      </form>
+
+      <!-- Generated Results Section (Exact Layout of Screenshot 1 & 2) -->
+      <section id="results-section">
+        
+        <div class="results-header-bar">
+          <h2 class="results-title">Your Party Budget Plan</h2>
+          <button type="button" class="btn-print-save" onclick="window.print()">🖨️ Print/Save</button>
+        </div>
+
+        <div class="budget-callout" id="callout-budget">
+          Budget: ₹5000.00
+        </div>
+
+        <!-- 1. Venue Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <div class="card-banner-left">
+              <span>📍</span>
+              <span>Venue</span>
+            </div>
+            <span>₹0.00</span>
+          </div>
+          <div class="card-inner-body">
+            <div class="subitem-header">
+              <span>Home</span>
+              <span>₹0.00</span>
+            </div>
+            <p class="subitem-desc">Utilizing the home as the venue.</p>
+            <div class="shop-line">
+              <span>Shop on:</span>
+              <a href="https://www.google.com" target="_blank">🔗 Google</a>
+              <a href="https://www.booking.com" target="_blank">🔗 Booking</a>
+              <a href="https://www.makemytrip.com" target="_blank">🔗 Makemytrip</a>
+              <a href="https://www.oyorooms.com" target="_blank">🔗 Oyorooms</a>
+              <a href="https://www.nobroker.in" target="_blank">🔗 Nobroker</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Catering Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <div class="card-banner-left">
+              <span>🍴</span>
+              <span>Catering</span>
+            </div>
+            <span>₹2000.00</span>
+          </div>
+          <div class="card-inner-body">
+            <div class="subitem-header">
+              <span>Home-cooked meal</span>
+              <span>₹2000.00</span>
+            </div>
+            <p class="subitem-desc">Simple, home-cooked meal for 3 people.</p>
+            <div class="shop-line">
+              <span>Shop on:</span>
+              <a href="https://www.swiggy.com" target="_blank">🔗 Swiggy</a>
+              <a href="https://www.zomato.com" target="_blank">🔗 Zomato</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Entertainment Card with 4 Sub-Items -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <div class="card-banner-left">
+              <span>🎵</span>
+              <span>Entertainment</span>
+            </div>
+            <span>₹2000.00</span>
+          </div>
+          <div class="card-inner-body">
+
+            <!-- Subitem 1: Streaming -->
+            <div class="category-subitem">
+              <div class="subitem-header">
+                <span>Streaming service subscription</span>
+                <span>₹500.00</span>
+              </div>
+              <p class="subitem-desc">One-time purchase of a movie or renting a few movies on a platform like Netflix, Amazon Prime Video, or Hotstar.</p>
+              <div class="shop-line">
+                <span>Shop on:</span>
+                <a href="https://www.amazon.in" target="_blank">🔗 Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank">🔗 Flipkart</a>
+                <a href="https://in.bookmyshow.com" target="_blank">🔗 Bookmyshow</a>
+              </div>
+            </div>
+
+            <!-- Subitem 2: Board Games -->
+            <div class="category-subitem">
+              <div class="subitem-header">
+                <span>Board games/cards</span>
+                <span>₹500.00</span>
+              </div>
+              <p class="subitem-desc">Purchase of a new board game or card game.</p>
+              <div class="shop-line">
+                <span>Shop on:</span>
+                <a href="https://www.amazon.in" target="_blank">🔗 Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank">🔗 Flipkart</a>
+                <a href="https://in.bookmyshow.com" target="_blank">🔗 Bookmyshow</a>
+              </div>
+            </div>
+
+            <!-- Subitem 3: Music Playlist -->
+            <div class="category-subitem">
+              <div class="subitem-header">
+                <span>Music playlist</span>
+                <span>₹0.00</span>
+              </div>
+              <p class="subitem-desc">Creating a celebratory playlist on Spotify or YouTube Music.</p>
+              <div class="shop-line">
+                <span>Shop on:</span>
+                <a href="https://www.amazon.in" target="_blank">🔗 Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank">🔗 Flipkart</a>
+                <a href="https://in.bookmyshow.com" target="_blank">🔗 Bookmyshow</a>
+              </div>
+            </div>
+
+            <!-- Subitem 4: Small Gift -->
+            <div class="category-subitem">
+              <div class="subitem-header">
+                <span>Small gift for couple</span>
+                <span>₹1000.00</span>
+              </div>
+              <p class="subitem-desc">A small token of appreciation for the couple.</p>
+              <div class="shop-line">
+                <span>Shop on:</span>
+                <a href="https://www.amazon.in" target="_blank">🔗 Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank">🔗 Flipkart</a>
+                <a href="https://in.bookmyshow.com" target="_blank">🔗 Bookmyshow</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4. Contingency Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <div class="card-banner-left">
+              <span>🔵</span>
+              <span>Contingency</span>
+            </div>
+            <span>₹1000.00</span>
+          </div>
+          <div class="card-inner-body">
+            <div class="subitem-header">
+              <span>Unexpected expenses</span>
+              <span>₹1000.00</span>
+            </div>
+            <p class="subitem-desc">Buffer for unforeseen costs.</p>
+            <div class="shop-line">
+              <span>Shop on:</span>
+              <a href="https://www.amazon.in" target="_blank">🔗 Amazon</a>
+              <a href="https://www.flipkart.com" target="_blank">🔗 Flipkart</a>
+              <a href="https://www.google.com" target="_blank">🔗 Google</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Budget Overview Breakdown Table -->
+        <div class="result-card">
+          <table class="overview-table">
+            <tbody>
+              <tr>
+                <td>Total Budget</td>
+                <td class="table-val-blue" id="res-overview-total">₹5000.00</td>
+              </tr>
+              <tr>
+                <td>Allocated</td>
+                <td id="res-overview-allocated">₹5000.00</td>
+              </tr>
+              <tr>
+                <td>Remaining</td>
+                <td id="res-overview-remaining">₹0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 6. Venue Suggestions Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <div class="card-banner-left">
+              <span>📍</span>
+              <span>Venue Suggestions</span>
+            </div>
+          </div>
+          <div class="card-inner-body">
+            <div class="venue-item-title">
+              <span id="res-venue-name">Home</span>
+              <span>₹0.00</span>
+            </div>
+            <div class="venue-tags-row">
+              <div>🏷️ <strong>Type:</strong> Residential</div>
+              <div>🏢 <strong>Location:</strong> undefined</div>
+              <div>ℹ️ undefined</div>
+            </div>
+            <div class="venue-links-row">
+              <a href="#" target="_blank">🌐 Website</a>
+              <a href="https://maps.google.com" target="_blank">🗺️ View on Map</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Additional Suggestions Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <div class="card-banner-left">
+              <span>💡</span>
+              <span>Additional Suggestions</span>
+            </div>
+          </div>
+          <div class="card-inner-body">
+            <div class="suggestions-box">
+              <ul class="suggestions-list">
+                <li><span class="check-bullet">•</span> Consider making the meal a potluck style if comfortable with guests to reduce catering costs.</li>
+                <li><span class="check-bullet">•</span> Look for discounts or offers on streaming services or board games.</li>
+                <li><span class="check-bullet">•</span> Homemade decorations can be a cost-effective alternative if you decide to add some.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Bottom Footer -->
+  <footer class="footer-bar">
+    &copy; 2026 PocketSmart. All rights reserved.
+  </footer>
+
+  <script>
+    // Logout Action
+    document.getElementById('logout-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    });
+
+    function toggleNeedCard(checkbox) {
+      const card = checkbox.closest('.need-card');
+      if (checkbox.checked) {
+        card.classList.add('active');
+      } else {
+        card.classList.remove('active');
+      }
+    }
+
+    // Form Submit Handler
+    document.getElementById('party-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const budget = parseFloat(document.getElementById('total_budget').value) || 5000;
+      const venueType = document.getElementById('venue_type').value || 'Home';
+
+      document.getElementById('callout-budget').textContent = `Budget: ₹${budget.toFixed(2)}`;
+      document.getElementById('res-overview-total').textContent = `₹${budget.toFixed(2)}`;
+      document.getElementById('res-overview-allocated').textContent = `₹${budget.toFixed(2)}`;
+      document.getElementById('res-overview-remaining').textContent = `₹0.00`;
+      document.getElementById('res-venue-name').textContent = venueType;
+
+      const resultsSection = document.getElementById('results-section');
+      resultsSection.style.display = 'block';
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

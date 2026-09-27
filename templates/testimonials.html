@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart - Testimonials</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #fbf7f4; color: #2c1a14; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 3rem;
+      background: #ffffff;
+      border-bottom: 1px solid #ebdcd3;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .brand { font-size: 1.45rem; font-weight: 700; color: #b84b14; text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 1.8rem; }
+    .nav-links a { color: #693217; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.2s; }
+    .nav-links a:hover { color: #b84b14; }
+    .nav-links a.active { color: #b84b14; border-bottom: 2px solid #b84b14; padding-bottom: 2px; }
+    
+    .btn-nav {
+      background-color: #b84b14;
+      color: #ffffff !important;
+      padding: 0.55rem 1.2rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+    .btn-nav:hover { background-color: #9c3c0c; }
+
+    /* Testimonials Section */
+    .hero-section {
+      text-align: center;
+      padding: 3.5rem 1.5rem 1.5rem 1.5rem;
+    }
+    .hero-section h1 {
+      font-size: 2.2rem;
+      color: #3b190d;
+      font-weight: 800;
+      position: relative;
+      display: inline-block;
+      margin-bottom: 0.8rem;
+    }
+    .hero-section h1::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 3px;
+      background-color: #b84b14;
+      border-radius: 2px;
+    }
+    .hero-section p {
+      color: #7a5e53;
+      font-size: 1rem;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Cards Grid */
+    .cards-container {
+      max-width: 1180px;
+      margin: 2rem auto 4rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .testimonial-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.2rem;
+      border: 1px solid #ebdcd3;
+      box-shadow: 0 6px 18px rgba(184, 75, 20, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(184, 75, 20, 0.08);
+    }
+    .quote-icon {
+      font-size: 2.5rem;
+      color: #ebdcd3;
+      font-family: Georgia, serif;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .testimonial-text {
+      color: #4a342c;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 1.8rem;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #f4e8e1;
+      color: #b84b14;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      border: 1px solid #e5cdbf;
+    }
+    .user-info h4 {
+      color: #3b190d;
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+    .user-info span {
+      color: #8c746b;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    /* Call To Action Banner */
+    .cta-banner {
+      background: linear-gradient(135deg, #b84b14 0%, #872812 100%);
+      color: #ffffff;
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      margin-top: auto;
+    }
+    .cta-banner h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+    }
+    .cta-banner p {
+      opacity: 0.92;
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto 1.8rem auto;
+      line-height: 1.5;
+    }
+    .cta-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-cta-secondary {
+      padding: 0.7rem 1.8rem;
+      background: #ffffff;
+      color: #872812;
+      border: none;
+      border-radius: 24px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-cta-secondary:hover { background: #fdf5f0; }
+    .btn-cta-primary {
+      padding: 0.7rem 1.8rem;
+      background: rgba(44, 26, 20, 0.4);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 24px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-cta-primary:hover { background: rgba(44, 26, 20, 0.6); }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="/" class="brand">PocketSmart</a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/testimonials" class="active">Testimonials</a>
+      <a href="/login">Sign In</a>
+      <a href="/register" class="btn-nav">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero Headline -->
+  <div class="hero-section">
+    <h1>What Our Users Say</h1>
+    <p>Real experiences from people who have transformed their financial planning with PocketSmart</p>
+  </div>
+
+  <!-- 3 Testimonial Cards Matching Screenshot -->
+  <div class="cards-container">
+    <!-- Card 1 -->
+    <div class="testimonial-card">
+      <div>
+        <div class="quote-icon">“</div>
+        <p class="testimonial-text">"PocketSmart helped me furnish my new apartment without breaking the bank. The recommendations were spot on and I saved nearly 30% of my original budget!"</p>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">SK</div>
+        <div class="user-info">
+          <h4>Karthik P.Nadar</h4>
+          <span>Home Owner</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="testimonial-card">
+      <div>
+        <div class="quote-icon">“</div>
+        <p class="testimonial-text">"Planning my daughter's birthday party was so much easier with PocketSmart's budget breakdown. The AI suggestions for affordable decorations and catering options were fantastic."</p>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">MR</div>
+        <div class="user-info">
+          <h4>Jothi Lakshmi</h4>
+          <span>Parent</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="testimonial-card">
+      <div>
+        <div class="quote-icon">“</div>
+        <p class="testimonial-text">"The jewelry recommendations perfectly matched my outfit for the wedding. Saved me hours of searching and I received so many compliments on my accessories!"</p>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">PM</div>
+        <div class="user-info">
+          <h4>Gunaseelan</h4>
+          <span>Fashion Enthusiast</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA Banner Matching Screenshot -->
+  <div class="cta-banner">
+    <h2>Ready to Optimize Your Budget?</h2>
+    <p>Join PocketSmart today and start making smarter financial decisions across all areas of your life.</p>
+    <div class="cta-actions">
+      <a href="/login" class="btn-cta-secondary">Sign In</a>
+      <a href="/register" class="btn-cta-primary">Create Account</a>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart - Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #fbf7f4; color: #2c1a14; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Top Navigation */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 3rem;
+      background: #1e0b05;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #e5cdbf;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: #ffffff; }
+
+    /* Blue / Terracotta Hero Section */
+    .hero-banner {
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      text-align: center;
+      padding: 3.5rem 1.5rem 6.5rem 1.5rem;
+    }
+    .hero-banner h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+    }
+    .hero-banner p {
+      color: #faeade;
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.95;
+    }
+
+    /* 3 Main Planner Cards Grid (Pulled up into banner) */
+    .main-container {
+      max-width: 1140px;
+      margin: -4.5rem auto 3rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+    .planner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+    .planner-card {
+      background: #ffffff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(74, 25, 10, 0.08);
+      border: 1px solid #ebdcd3;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .planner-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 34px rgba(74, 25, 10, 0.14);
+    }
+    .card-img {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      display: block;
+      background-color: #ebdcd3;
+    }
+    .card-body {
+      padding: 1.6rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #701c0a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: #634b41;
+      line-height: 1.5;
+      margin-bottom: 1.6rem;
+    }
+    .card-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 0.75rem;
+      background: #a73c0e;
+      color: #ffffff;
+      border-radius: 24px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+    }
+    .card-btn:hover { background: #882b07; }
+
+    /* Gold History Button */
+    .history-btn-wrap {
+      text-align: center;
+      margin: 1.5rem 0 3rem 0;
+    }
+    .btn-gold-history {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+      color: #ffffff;
+      padding: 0.75rem 1.8rem;
+      border-radius: 24px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      box-shadow: 0 4px 14px rgba(211, 84, 0, 0.25);
+      transition: opacity 0.2s ease;
+    }
+    .btn-gold-history:hover { opacity: 0.92; }
+
+    /* Recent Activity Section */
+    .recent-activity-card {
+      max-width: 820px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border: 1px solid #ebdcd3;
+    }
+    .activity-header {
+      background: #701c0a;
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .activity-list {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid #f3e9e2;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fbeee6;
+      color: #a73c0e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .activity-details h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #3b190d;
+      margin-bottom: 0.2rem;
+    }
+    .activity-details p {
+      font-size: 0.8rem;
+      color: #8c746b;
+    }
+
+    /* Footer */
+    .footer-bar {
+      margin-top: auto;
+      background: #1e0b05;
+      color: #a38c82;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="/dashboard" class="brand">👛 PocketSmart</a>
+    <ul class="nav-links">
+      <li><a href="/home-planner">🏠 Home Planner</a></li>
+      <li><a href="/party-planner">🎉 Party Planner</a></li>
+      <li><a href="/jewelry-planner">💍 Jewelry Planner</a></li>
+      <li><a href="#history">🕒 History</a></li>
+      <li><a href="/login" id="logout-link">↪ Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Welcome Hero -->
+  <header class="hero-banner">
+   <h1 id="welcome-title">Welcome, User!</h1>
+    <p>Choose a budget planner to get started with your personalized financial planning experience</p>
+  </header>
+
+  <!-- 3 Action Cards -->
+  <main class="main-container">
+    <div class="planner-grid">
+
+      <!-- Home Planner -->
+      <div class="planner-card">
+        <img class="card-img" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=80" alt="Home Interior">
+        <div class="card-body">
+          <div>
+            <h3 class="card-title">🏠 Home Budget Planner</h3>
+            <p class="card-desc">Plan your interior design budget efficiently with AI-powered recommendations for furniture, lighting, and more.</p>
+          </div>
+          <a href="/home-planner" class="card-btn">Get Started</a>
+        </div>
+      </div>
+
+      <!-- Party Planner -->
+      <div class="planner-card">
+        <img class="card-img" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=700&q=80" alt="Party Balloons">
+        <div class="card-body">
+          <div>
+            <h3 class="card-title">🎉 Party Budget Planner</h3>
+            <p class="card-desc">Plan your perfect event with budget allocations for venue, catering, decorations, and entertainment.</p>
+          </div>
+          <a href="/party-planner" class="card-btn">Get Started</a>
+        </div>
+      </div>
+
+      <!-- Jewelry Planner -->
+      <div class="planner-card">
+        <img class="card-img" src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=80" alt="Jewelry">
+        <div class="card-body">
+          <div>
+            <h3 class="card-title">💍 Jewelry Budget Planner</h3>
+            <p class="card-desc">Find the ideal jewelry pieces for any occasion that match your outfit and stay within your budget.</p>
+          </div>
+          <a href="/jewelry-planner" class="card-btn">Get Started</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Gold History CTA Button -->
+    <div class="history-btn-wrap" id="history">
+      <a href="#recent-activity" class="btn-gold-history">🔄 View All Recommendation History</a>
+    </div>
+
+    <!-- Recent Activity Timeline Card -->
+    <section class="recent-activity-card" id="recent-activity">
+      <div class="activity-header">
+        <span>🕒</span> Recent Activity
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon-circle">🏠</div>
+          <div class="activity-details">
+            <h5>Home Budget Plan</h5>
+            <p>Budget: ₹50,000 · Created recently</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon-circle">🎉</div>
+          <div class="activity-details">
+            <h5>Birthday Party Budget Plan</h5>
+            <p>Budget: ₹35,000 for 30 guests · Created recently</p>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon-circle">💍</div>
+          <div class="activity-details">
+            <h5>Jewelry Budget Plan</h5>
+            <p>Budget: ₹75,000 for Wedding · Created recently</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Footer -->
+  <footer class="footer-bar">
+    &copy; 2026 PocketSmart. All rights reserved.
+  </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const username = localStorage.getItem('username') || 'User';
+    
+    // Finds the heading whether its ID is 'welcome-title', or searches the h1 directly
+    const titleEl = document.getElementById('welcome-title') || document.querySelector('h1');
+    if (titleEl) {
+      titleEl.textContent = `Welcome, ${username}!`;
+    }
+
+    // Logout handler
+    const logoutBtn = document.getElementById('logout-link') || document.querySelector('a[href="/login"]');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = '/login';
+      });
+    }
+  });
+</script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Get the username saved during login
+    const storedUsername = localStorage.getItem("username");
+    const greetingElement = document.getElementById("user-greeting");
+
+    // 2. If a username exists, display it on screen
+    if (storedUsername && greetingElement) {
+      greetingElement.textContent = `Welcome, ${storedUsername}!`;
+    }
+  });
+</script>
+</body>
+</html>

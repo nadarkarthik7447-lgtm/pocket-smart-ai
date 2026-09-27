@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart - Jewelry Budget Planner</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #fbf7f4; color: #2c1a14; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Top Navigation */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 3rem;
+      background: #1e0b05;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #e5cdbf;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s ease;
+    }
+    .nav-links a.active, .nav-links a:hover { color: #f59e0b; }
+    .btn-logout { color: #fca5a5 !important; }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      text-align: center;
+      padding: 3.2rem 1.5rem 5.5rem 1.5rem;
+    }
+    .hero-banner h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .hero-banner p {
+      color: #faeade;
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Container */
+    .planner-wrapper {
+      max-width: 820px;
+      margin: -3.8rem auto 3rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+    .planner-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.2rem;
+      box-shadow: 0 10px 30px rgba(74, 25, 10, 0.08);
+      border: 1px solid #ebdcd3;
+    }
+
+    /* Form Section Cards */
+    .form-section {
+      background: #faf4ef;
+      border: 1px solid #f0e1d7;
+      border-radius: 12px;
+      padding: 1.4rem;
+      margin-bottom: 1.6rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #701c0a;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e7cebf;
+    }
+    .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #a73c0e;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #4a2c1f;
+      margin-bottom: 0.45rem;
+    }
+    .input-box {
+      width: 100%;
+      padding: 0.75rem 0.95rem;
+      border-radius: 8px;
+      border: 1.5px solid #d9c4b7;
+      font-size: 0.92rem;
+      color: #2c1a14;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .input-box:focus {
+      border-color: #a73c0e;
+      box-shadow: 0 0 0 3px rgba(167, 60, 14, 0.12);
+    }
+    textarea.input-box {
+      resize: vertical;
+      min-height: 85px;
+    }
+
+    /* Upload & Preview */
+    .upload-area {
+      border: 2px dashed #d9c4b7;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+    .upload-area:hover { border-color: #a73c0e; }
+    .preview-container {
+      position: relative;
+      display: none;
+      width: 100%;
+      max-height: 380px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ebdcd3;
+      background: #fbf7f4;
+    }
+    .preview-container img {
+      width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      display: block;
+    }
+    .btn-remove-image {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: #4a1e12;
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 0.95rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .btn-remove-image:hover { background: #b91c1c; }
+
+    /* Button */
+    .btn-submit-wrap {
+      text-align: center;
+      margin-top: 1.8rem;
+    }
+    .btn-generate {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 26px;
+      padding: 0.85rem 2.4rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(112, 28, 10, 0.25);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    /* --- Results Section --- */
+    #results-section {
+      display: none;
+      margin-top: 2.5rem;
+    }
+    .results-title {
+      text-align: center;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #3b190d;
+      margin-bottom: 1.8rem;
+    }
+
+    .result-card {
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #ebdcd3;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.8rem;
+    }
+    .card-banner-header {
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      padding: 0.9rem 1.4rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-inner-body {
+      padding: 1.2rem 1.4rem;
+    }
+
+    /* Summary */
+    .summary-metrics {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #4a2c1f;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .metric-val-blue { color: #a73c0e; }
+    .metric-val-green { color: #1e7e34; }
+
+    /* Outfit Analysis Row */
+    .outfit-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      font-size: 0.92rem;
+      color: #4a2c1f;
+    }
+    .outfit-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .meta-tag {
+      font-weight: 700;
+      color: #701c0a;
+    }
+
+    /* Jewelry Recommendation Item Block */
+    .jewelry-item-box {
+      border-bottom: 1px solid #f0e1d7;
+      padding-bottom: 1.4rem;
+      margin-bottom: 1.4rem;
+    }
+    .jewelry-item-box:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    .item-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .item-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #701c0a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-transform: capitalize;
+    }
+    .price-pill {
+      background: #a73c0e;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+    }
+    .item-desc {
+      font-size: 0.88rem;
+      color: #553c31;
+      line-height: 1.5;
+      margin-bottom: 0.4rem;
+    }
+    .item-desc strong {
+      color: #2c1a14;
+    }
+    .item-style {
+      font-size: 0.86rem;
+      color: #553c31;
+      margin-bottom: 0.9rem;
+    }
+    .item-style strong {
+      color: #2c1a14;
+    }
+
+    /* Shopping Buttons Cluster */
+    .shop-heading {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #701c0a;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.6rem;
+    }
+    .links-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .btn-shop {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.35rem 0.75rem;
+      background: #faf4ef;
+      border: 1px solid #d9c4b7;
+      color: #701c0a;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-shop:hover {
+      background: #a73c0e;
+      color: #ffffff;
+      border-color: #a73c0e;
+    }
+
+    /* Styling Tips Card */
+    .styling-tips-inner {
+      background: #faf4ef;
+      border: 1px solid #eedfd6;
+      border-radius: 8px;
+      padding: 1.2rem;
+    }
+    .tips-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .tips-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: #3b190d;
+      line-height: 1.45;
+    }
+    .check-icon {
+      color: #a73c0e;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    /* Bottom Footer */
+    .footer-bar {
+      margin-top: auto;
+      background: #1e0b05;
+      color: #a38c82;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <a href="/dashboard" class="brand">👛 PocketSmart</a>
+    <ul class="nav-links">
+      <li><a href="/dashboard">📊 Dashboard</a></li>
+      <li><a href="/home-planner">🏠 Home Budget</a></li>
+      <li><a href="/party-planner">🎉 Party Budget</a></li>
+      <li><a href="/jewelry-planner" class="active">💍 Jewelry Budget</a></li>
+      <li><a href="/login" class="btn-logout" id="logout-btn">↪ Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Headline -->
+  <header class="hero-banner">
+    <h1>Jewelry Budget Planner</h1>
+    <p>Get AI-powered jewelry recommendations within your budget for any occasion</p>
+  </header>
+
+  <!-- Main Content Form -->
+  <main class="planner-wrapper">
+    <div class="planner-card">
+      <form id="jewelry-form">
+
+        <!-- 1. Budget Details Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">$</span>
+            <span>Budget Details</span>
+          </div>
+          <label class="field-label" for="total_budget">💵 Total Budget ($)</label>
+          <input type="number" id="total_budget" name="total_budget" class="input-box" placeholder="e.g. 5000" value="5000" required>
+        </section>
+
+        <!-- 2. Occasion & Preferences Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">📅</span>
+            <span>Occasion & Preferences</span>
+          </div>
+          
+          <div style="margin-bottom: 1.1rem;">
+            <label class="field-label" for="occasion">🎭 Occasion</label>
+            <input type="text" id="occasion" name="occasion" class="input-box" placeholder="e.g. Birthday, Wedding, Anniversary" value="Birthday" required>
+          </div>
+
+          <div>
+            <label class="field-label" for="style_preferences">💙 Style Preferences</label>
+            <textarea id="style_preferences" name="style_preferences" class="input-box" placeholder="Describe your style preferences, materials, colors, etc."></textarea>
+          </div>
+        </section>
+
+        <!-- 3. Upload Outfit Image Section -->
+        <section class="form-section">
+          <div class="section-header">
+            <span class="section-icon">👕</span>
+            <span>Upload Outfit Image</span>
+          </div>
+
+          <div class="upload-area" id="upload-box" onclick="document.getElementById('outfit-file-input').click()">
+            <span style="font-size: 1.8rem; display: block; margin-bottom: 0.4rem;">📷</span>
+            <span style="font-size: 0.95rem; font-weight: 600; color: #701c0a;">Click to browse and upload an outfit image</span>
+            <p style="font-size: 0.8rem; color: #8c746b; margin-top: 0.3rem;">PNG, JPG, or JPEG up to 10MB</p>
+            <input type="file" id="outfit-file-input" accept="image/*" style="display: none;">
+          </div>
+
+          <div class="preview-container" id="preview-wrapper">
+            <img id="image-preview" src="" alt="Outfit Preview">
+            <button type="button" class="btn-remove-image" id="remove-img-btn">🗑️ Remove Image</button>
+          </div>
+        </section>
+
+        <!-- Submit Button -->
+        <div class="btn-submit-wrap">
+          <button type="submit" class="btn-generate">🖌️ Get Recommendations</button>
+        </div>
+
+      </form>
+
+      <!-- Generated Results Section (Matching Screenshots) -->
+      <section id="results-section">
+        <h2 class="results-title">Your Personalized Jewelry Recommendations</h2>
+
+        <!-- 1. Budget Summary -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <span>📊</span> Budget Summary
+          </div>
+          <div class="card-inner-body">
+            <div class="summary-metrics">
+              <div>Total Budget: <span class="metric-val-blue" id="res-total-budget">$5000.00</span></div>
+              <div>Remaining Budget: <span class="metric-val-green" id="res-remaining-budget">$800.00</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Outfit Analysis -->
+        <div class="form-section" style="margin-bottom: 1.8rem;">
+          <div class="section-header">
+            <span class="section-icon">👕</span>
+            <span>Outfit Analysis</span>
+          </div>
+          <div class="outfit-meta-row">
+            <div class="outfit-meta-item">
+              <span>🎨</span> <span class="meta-tag">Colors:</span> <span>blue, white</span>
+            </div>
+            <div class="outfit-meta-item">
+              <span>🏷️</span> <span class="meta-tag">Style:</span> <span>casual</span>
+            </div>
+            <div class="outfit-meta-item">
+              <span>👔</span> <span class="meta-tag">Formality:</span> <span>informal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Jewelry Recommendations Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <span>💎</span> Jewelry Recommendations
+          </div>
+          <div class="card-inner-body">
+
+            <!-- Item 1: Bracelet -->
+            <div class="jewelry-item-box">
+              <div class="item-header-row">
+                <div class="item-title">🔵 bracelet</div>
+                <div class="price-pill">$500.00</div>
+              </div>
+              <p class="item-desc"><strong>Description:</strong> A simple, braided leather bracelet with metal accents. This complements the casual style of the outfit without being overly flashy.</p>
+              <p class="item-style"><strong>Style:</strong> casual</p>
+              
+              <div class="shop-heading">🛒 Shop For This:</div>
+              <div class="links-cluster">
+                <a href="https://www.amazon.com/s?k=leather+bracelet" target="_blank" class="btn-shop">🛒 Amazon</a>
+                <a href="https://www.flipkart.com/search?q=leather+bracelet" target="_blank" class="btn-shop">🛍️ Flipkart</a>
+                <a href="https://www.bluestone.com" target="_blank" class="btn-shop">💎 Bluestone</a>
+                <a href="https://www.tanishq.co.in" target="_blank" class="btn-shop">✨ Tanishq</a>
+                <a href="https://www.caratlane.com" target="_blank" class="btn-shop">💎 Caratlane</a>
+                <a href="https://www.melorra.com" target="_blank" class="btn-shop">🌸 Melorra</a>
+                <a href="https://www.meesho.com" target="_blank" class="btn-shop">📦 Meesho</a>
+              </div>
+            </div>
+
+            <!-- Item 2: Ring -->
+            <div class="jewelry-item-box">
+              <div class="item-header-row">
+                <div class="item-title">⭕ ring</div>
+                <div class="price-pill">$700.00</div>
+              </div>
+              <p class="item-desc"><strong>Description:</strong> A silver or dark grey metal ring with a minimalist design. Avoid anything too large or ostentatious to maintain the casual feel.</p>
+              <p class="item-style"><strong>Style:</strong> minimalist</p>
+              
+              <div class="shop-heading">🛒 Shop For This:</div>
+              <div class="links-cluster">
+                <a href="https://www.amazon.com/s?k=minimalist+ring" target="_blank" class="btn-shop">🛒 Amazon</a>
+                <a href="https://www.flipkart.com/search?q=minimalist+ring" target="_blank" class="btn-shop">🛍️ Flipkart</a>
+                <a href="https://www.bluestone.com" target="_blank" class="btn-shop">💎 Bluestone</a>
+                <a href="https://www.tanishq.co.in" target="_blank" class="btn-shop">✨ Tanishq</a>
+                <a href="https://www.caratlane.com" target="_blank" class="btn-shop">💎 Caratlane</a>
+                <a href="https://www.melorra.com" target="_blank" class="btn-shop">🌸 Melorra</a>
+                <a href="https://www.meesho.com" target="_blank" class="btn-shop">📦 Meesho</a>
+              </div>
+            </div>
+
+            <!-- Item 3: Watch -->
+            <div class="jewelry-item-box">
+              <div class="item-header-row">
+                <div class="item-title">⌚ watch</div>
+                <div class="price-pill">$3000.00</div>
+              </div>
+              <p class="item-desc"><strong>Description:</strong> A classic, simple watch with a leather or metal band. A darker band would complement the shirt's colors.</p>
+              <p class="item-style"><strong>Style:</strong> classic</p>
+              
+              <div class="shop-heading">🛒 Shop For This:</div>
+              <div class="links-cluster">
+                <a href="https://www.amazon.com/s?k=classic+watch" target="_blank" class="btn-shop">🛒 Amazon</a>
+                <a href="https://www.flipkart.com/search?q=classic+watch" target="_blank" class="btn-shop">🛍️ Flipkart</a>
+                <a href="https://www.bluestone.com" target="_blank" class="btn-shop">💎 Bluestone</a>
+                <a href="https://www.tanishq.co.in" target="_blank" class="btn-shop">✨ Tanishq</a>
+                <a href="https://www.caratlane.com" target="_blank" class="btn-shop">💎 Caratlane</a>
+                <a href="https://www.melorra.com" target="_blank" class="btn-shop">🌸 Melorra</a>
+                <a href="https://www.meesho.com" target="_blank" class="btn-shop">📦 Meesho</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4. Styling Tips Card -->
+        <div class="result-card">
+          <div class="card-banner-header">
+            <span>💡</span> Styling Tips
+          </div>
+          <div class="card-inner-body">
+            <div class="styling-tips-inner">
+              <ul class="tips-list">
+                <li><span class="check-icon">✔</span> Keep the jewelry minimal to match the casual style of the outfit.</li>
+                <li><span class="check-icon">✔</span> Consider the watch as a statement piece, choosing a design that reflects personal style.</li>
+                <li><span class="check-icon">✔</span> Ensure the metal tones of the ring and bracelet (if metal accents are chosen) complement each other.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Bottom Footer -->
+  <footer class="footer-bar">
+    &copy; 2026 PocketSmart. All rights reserved.
+  </footer>
+
+  <script>
+    // Logout Action
+    document.getElementById('logout-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    });
+
+    // Image Upload & Preview Handling
+    const fileInput = document.getElementById('outfit-file-input');
+    const uploadBox = document.getElementById('upload-box');
+    const previewWrapper = document.getElementById('preview-wrapper');
+    const imagePreview = document.getElementById('image-preview');
+    const removeBtn = document.getElementById('remove-img-btn');
+
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          uploadBox.style.display = 'none';
+          previewWrapper.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    removeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      fileInput.value = '';
+      imagePreview.src = '';
+      previewWrapper.style.display = 'none';
+      uploadBox.style.display = 'block';
+    });
+
+    // Form Submission & Results Display
+    document.getElementById('jewelry-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const budget = parseFloat(document.getElementById('total_budget').value) || 5000;
+      document.getElementById('res-total-budget').textContent = `$${budget.toFixed(2)}`;
+      document.getElementById('res-remaining-budget').textContent = `$${Math.max(0, budget - 4200).toFixed(2)}`;
+
+      const resultsSection = document.getElementById('results-section');
+      resultsSection.style.display = 'block';
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

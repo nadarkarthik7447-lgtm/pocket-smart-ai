@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSmart - Login</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #fbf7f4; color: #2c1a14; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .auth-card {
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(74, 25, 10, 0.08);
+      border: 1px solid #ebdcd3;
+      width: 100%;
+      max-width: 400px;
+    }
+    .brand { font-size: 1.5rem; font-weight: 800; color: #a73c0e; text-align: center; margin-bottom: 0.5rem; }
+    .subtitle { text-align: center; color: #7c6257; font-size: 0.9rem; margin-bottom: 1.8rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: #4a2c1f; margin-bottom: 0.4rem; }
+    input {
+      width: 100%;
+      padding: 0.75rem 0.95rem;
+      border: 1.5px solid #d9c4b7;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    input:focus { border-color: #a73c0e; }
+    .btn-login {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, #a73c0e 0%, #701c0a 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .error-msg {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 0.7rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .footer-links { text-align: center; margin-top: 1.2rem; font-size: 0.85rem; color: #7c6257; }
+    .footer-links a { color: #a73c0e; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <div class="brand">👛 PocketSmart</div>
+    <p class="subtitle">Sign in to manage your budgets</p>
+
+    <div id="error-box" class="error-msg"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <button type="submit" class="btn-login">Sign In</button>
+    </form>
+
+    <div class="footer-links">
+      Don't have an account? <a href="/register">Register here</a>
+    </div>
+  </div>
+
+<script>
+  const form = document.getElementById('login-form');
+  const errorBox = document.getElementById('error-box');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.style.display = 'none';
+
+    const usernameInput = document.getElementById('username').value.trim();
+    const passwordInput = document.getElementById('password').value;
+
+    // Check: Password must contain at least one special character
+    const specialChars = /[!@#$%^&*(),.?":{}|<>_\-+=~/`\\\[\]]/;
+    if (!specialChars.test(passwordInput)) {
+      errorBox.textContent = 'Password must contain at least one special character (!@#$%^&* etc.).';
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('username', usernameInput);
+    formData.append('password', passwordInput);
+
+    try {
+      const response = await fetch('/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // If an email was used, take the part before '@', otherwise take the exact username
+        const displayName = usernameInput.includes('@') ? usernameInput.split('@')[0] : usernameInput;
+        localStorage.setItem('username', displayName);
+
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+        }
+
+        window.location.href = '/dashboard';
+      } else {
+        errorBox.textContent = data.detail || 'Invalid username or password.';
+        errorBox.style.display = 'block';
+      }
+    } catch (err) {
+      errorBox.textContent = 'Server connection error. Please try again.';
+      errorBox.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>
